@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>ToDolist</title>
+    <script src="js/jquery.js"></script>
+    <style>
+        *{
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            box-sizing: border-box;
+        }
+        body{
+            background: #cdcdcd;
+        }
+        header{
+            width: 100%;
+            height: 50px;
+            background: #333;
+        }
+        .input{
+            width:550px;
+            height: 50px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .input>input{
+            width: 400px;
+            height: 30px;
+            background: #fff;
+            border: 0;
+            border-radius: 10px;
+            padding: 0 20px;
+        }
+        span{
+            font-size: 18px;
+            line-height: 50px;
+            color: #fff;
+        }
+        main{
+            width: 550px;
+            height: auto;
+            padding: 0 20px;
+            overflow: hidden;
+            /*background: red;*/
+            margin: 0 auto;
+        }
+        .amin{
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .amin>p{
+            font-size: 18px;
+            line-height: 50px;
+            color: #000;
+        }
+        .zhshu,.yishu{
+            width: 26px;
+            height:26px;
+            background: #fff;
+            font-size: 12px;
+            text-align: center;
+            line-height: 26px;
+            color: #000;
+            border-radius: 50%;
+        }
+        .tiao{
+            width: 100%;
+            height: auto;
+            overflow: hidden;
+            margin-top: 10px;
+        }
+        .todo .tiao li{
+            width: 100%;
+            height: 32px;
+            border-radius: 6px;
+            border-left: 5px solid #999;
+            opacity: 1;
+            margin-top: 10px;
+            background: #fff;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .done ul li{
+            width: 100%;
+            height: 32px;
+            border-radius: 6px;
+            border-left: 5px solid #999;
+            opacity: 0.5;
+            background: #fff;
+            margin-top: 10px;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .tiao li input{
+            width: 22px;
+            height: 22px;
+            background: #dcdcdc;
+            border: 1px solid #666666;
+        }
+        .tiao li p{
+            width: 75%;
+            height: 100%;
+            font-size: 14px;
+            line-height: 32px;
+            color: #333;
+        }
+        .tiao li p input{
+            width: 200px;
+            height: 75%;
+            font-size: 14px;
+            line-height: 32px;
+            color: #333;
+        }
+        .tiao li .del{
+            width: 22px;
+            height: 22px;
+            background: #ccc;
+            border: 1px solid #ffffff;
+            color: #ffffff;
+            font-size: 14px;
+            text-align: center;
+            line-height: 22px;
+            border-radius: 50%;
+        }
+    </style>
+</head>
+<body>
+<div class="box">
+    <header>
+        <div class="input">
+            <span>ToDolist</span>
+            <input type="text" id='input' value="创建TODO"/>
+        </div>
+    </header>
+    <main class="todo">
+        <div class="amin">
+            <p>正在进行</p>
+            <div class="zhshu">0</div>
+        </div>
+        <ul class="tiao">
+            <!--<li class="true">
+                <input type="checkbox" checkbox/>
+                <p class="wen">他人的官方同人刚好肉体和个人愤怒太原号</p>
+                <div class="a">@</div>
+            </li>-->
+        </ul>
+    </main>
+    <main class="done">
+        <div class="amin">
+            <p>已经完成</p>
+            <div class="yishu">0</div>
+        </div>
+        <ul class="tiao"><!--
+            <li>
+                <input type="checkbox" checked/>
+                <p>他人的官方同人刚好肉体和个人愤怒太原号</p>
+                <div class="del">@</div>
+            </li>-->
+        </ul>
+    </main>
+</div>
+</body>
+</html>
+<script>
+//    var todo=[
+//        {id:0,value:'1111111',status:true},
+//        {id:1,value:'222222222222',status:false},
+//        {id:2,value:'33333333',status:true},
+//        {id:3,value:'4444444444',status:false},
+//        {id:4,value:'5555555555',status:true},
+//        {id:5,value:'666666666',status:false}
+//    ]
+    nextid=7;
+
+    if(localStorage.data){
+        todo=JSON.parse(localStorage.data)
+    }
+    function render(){
+        let doing=[];
+        let done=[];
+        todo.forEach(val=>{
+            if(val.status){
+//                console.log(val);
+                done.push(val);
+            }else{
+                doing.push(val);
+            }
+        })
+        let str='';
+//        console.log(doing,done);
+        doing.forEach(val=>{
+//            console.log(val.length);
+            str+=`<li id=${val.id}>
+                <input type="checkbox"/>
+                <p>${val.value}</p>
+                <div class="del">@</div>
+                </li>
+            `
+        })
+        $('.todo').find('.tiao').html(str).end().find('.zhshu').html(doing.length);
+        let atr='';
+        done.forEach(val=>{
+            atr+=`<li id=${val.id}>
+                <input type="checkbox" checked/>
+                <p>${val.value}</p>
+                <div class="del">@</div>
+                </li>
+            `
+        })
+        $('.done').find('.tiao').html(atr).end().find('.yishu').html(done.length);
+    }
+    render();
+    localStorage.data=JSON.stringify(todo);
+    localStorage.nextid=nextid;
+
+    $('.box').on('click','.del',function(){
+        let id=$(this).closest('li').attr('id');
+        let index=todo.findIndex(val=>val.id==id);
+        todo.splice(index,1);
+        localStorage.data=JSON.stringify(todo);
+        localStorage.nextid=nextid;
+//        重绘
+        render();
+//        if($(this).closest('main').hasClass('todo')){
+//            let index=doing.findIndex(val=>val.id==id);
+//            doing.splice(index,1);
+//        }else{
+//            console.log('doing');
+//        }
+    }).on('click','p',function(){
+        let id=$(this).closest('li').attr('id');
+        let index=todo.findIndex(val=>val.id==id);
+        let input=$('<input>').val($(this).text());
+        $(this).html('').append(input);
+        input.focus();
+        input.change(function(){
+            todo[index].value=$(this).val();
+            console.log(todo);
+            localStorage.data=JSON.stringify(todo);
+            localStorage.nextid=nextid;
+            render();
+        });
+    }).on("click",'input:checked',function () {
+        let id=$(this).closest('li').attr('id');
+        let index=todo.findIndex(val=>val.id==id);
+        todo[index].status=!todo[index].status;
+        localStorage.data=JSON.stringify(todo);
+        localStorage.nextid=nextid;
+        render();
+    });
+
+    let input1=$('#input');
+    input1.on('keyup',function(e){
+        if(e.which===13){
+            console.log(1);
+            if($(this).val()){
+                todo.unshift({id:nextid,value:$(this).val(),status:false});
+                nextid++;
+                localStorage.data=JSON.stringify(todo);
+                localStorage.nextid=nextid;
+                render();
+            }
+        }
+    })
+
+
+</script>
